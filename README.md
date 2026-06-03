@@ -1,8 +1,8 @@
 # Task Manager - Technical Assessment
 
 ## Assignment Timeline
-- **Start Time:** `[Insert your exact start time here, e.g., 2026-06-02 18:00 UTC]`
-- **End Time:** `[Insert your exact end time here, e.g., 2026-06-03 18:00 UTC]`
+- **Start Time:** Jun 2, 11 pm 
+- **End Time:** Jun 3, 11:30 pm 
 
 ## How to Run Locally
 
