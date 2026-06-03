@@ -12,16 +12,17 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         {/* <WorkspaceRail /> */}
 
         {/* shadcn SidebarProvider wraps the project sidebar + main area */}
-        <SidebarProvider defaultOpen={true} className="flex flex-1 overflow-hidden">
+        <SidebarProvider
+          defaultOpen={true}
+          className="flex flex-1 overflow-hidden"
+        >
           {/* Project sidebar */}
           <ProjectSidebar />
 
           {/* Main content */}
           <SidebarInset className="flex min-w-0 flex-1 flex-col overflow-hidden">
             <DashboardHeader />
-            <main className="flex-1 overflow-y-auto">
-              {children}
-            </main>
+            <main className="flex-1 overflow-y-auto">{children}</main>
           </SidebarInset>
         </SidebarProvider>
       </div>

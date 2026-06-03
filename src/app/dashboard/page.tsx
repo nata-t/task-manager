@@ -1,7 +1,5 @@
-import { redirect } from "next/navigation";
-import { WORKSPACES } from "@/lib/data";
+import DashboardPage from "@/features/dashboard";
 
-export default function DashboardPage() {
-  const firstWorkspace = WORKSPACES[0];
-  redirect(`/dashboard/${firstWorkspace.id}`);
+export default function Page() {
+  return <DashboardPage />;
 }

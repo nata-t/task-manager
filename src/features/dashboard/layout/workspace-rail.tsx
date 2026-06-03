@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { WORKSPACES } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -13,7 +17,7 @@ export function WorkspaceRail() {
   return (
     <aside
       className={cn(
-        "relative z-20 flex h-full w-14 flex-shrink-0 flex-col items-center gap-1 border-r border-border bg-[oklch(0.16_0_0)] py-3"
+        "relative z-20 flex h-full w-14 shrink-0 flex-col items-center gap-1 border-r border-border bg-[oklch(0.16_0_0)] py-3",
       )}
     >
       {/* App logo */}
@@ -37,7 +41,7 @@ export function WorkspaceRail() {
                     "hover:scale-105 hover:shadow-lg",
                     isActive
                       ? "shadow-lg ring-2 ring-white/20 ring-offset-1 ring-offset-transparent"
-                      : "opacity-70 hover:opacity-100"
+                      : "opacity-70 hover:opacity-100",
                   )}
                   style={{
                     background: isActive
@@ -52,7 +56,7 @@ export function WorkspaceRail() {
 
                   {/* Active indicator pip */}
                   {isActive && (
-                    <span className="absolute -left-[3px] top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-full bg-white" />
+                    <span className="absolute -left-0.75 top-1/2 h-4 w-0.75 -translate-y-1/2 rounded-full bg-white" />
                   )}
                 </Link>
               </TooltipTrigger>
@@ -71,7 +75,7 @@ export function WorkspaceRail() {
             <button
               className={cn(
                 "flex h-9 w-9 items-center justify-center rounded-xl text-xs text-muted-foreground",
-                "transition-all duration-150 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                "transition-all duration-150 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
               )}
               aria-label="Add workspace"
             >
