@@ -6,6 +6,6 @@ interface Props {
 
 export default async function WorkspacePage({ params }: Props) {
   const { workspaceId } = await params;
-  
+
   return <WorkspaceDetailFeature workspaceId={workspaceId} />;
 }

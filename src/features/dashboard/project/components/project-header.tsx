@@ -20,7 +20,7 @@ function formatDate(iso: string) {
 export function ProjectHeader({ project }: ProjectHeaderProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
-  
+
   const [editTitle, setEditTitle] = useState(project.name);
   const [editDesc, setEditDesc] = useState(project.description || "");
 
@@ -44,7 +44,11 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
 
   const handleSaveTitle = () => {
     if (editTitle.trim() && editTitle.trim() !== project.name) {
-      updateProject.mutate({ id: project.id, workspaceId: project.workspace_id, name: editTitle.trim() });
+      updateProject.mutate({
+        id: project.id,
+        workspaceId: project.workspace_id,
+        name: editTitle.trim(),
+      });
     } else {
       setEditTitle(project.name);
     }
@@ -53,7 +57,11 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
 
   const handleSaveDesc = () => {
     if (editDesc.trim() !== (project.description || "")) {
-      updateProject.mutate({ id: project.id, workspaceId: project.workspace_id, description: editDesc.trim() });
+      updateProject.mutate({
+        id: project.id,
+        workspaceId: project.workspace_id,
+        description: editDesc.trim(),
+      });
     } else {
       setEditDesc(project.description || "");
     }
@@ -126,7 +134,7 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
           </p>
         )}
       </div>
-      
+
       <p className="text-xs text-muted-foreground mt-1 tracking-tight">
         Created on {formatDate(project.created_at)}
       </p>

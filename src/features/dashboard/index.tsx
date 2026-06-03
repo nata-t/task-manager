@@ -13,9 +13,10 @@ export default function DashboardPage() {
   const { data: workspaces, isLoading, error } = useWorkspaces();
   const createWorkspace = useCreateWorkspace();
 
-  const filtered = workspaces?.filter((w) =>
-    w.name.toLowerCase().includes(query.toLowerCase())
-  ) || [];
+  const filtered =
+    workspaces?.filter((w) =>
+      w.name.toLowerCase().includes(query.toLowerCase()),
+    ) || [];
 
   return (
     <div className="p-10">
@@ -34,8 +35,8 @@ export default function DashboardPage() {
           />
         </div>
 
-        <Button 
-          size="sm" 
+        <Button
+          size="sm"
           className="ml-auto"
           onClick={() => createWorkspace.mutate("New Workspace")}
           disabled={createWorkspace.isPending}
@@ -63,9 +64,9 @@ export default function DashboardPage() {
         <div className="mt-20 flex flex-col items-center gap-3 text-muted-foreground">
           <LayoutGrid className="h-8 w-8 opacity-40" />
           <p className="text-sm">No workspaces found</p>
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="mt-2"
             onClick={() => createWorkspace.mutate("New Workspace")}
             disabled={createWorkspace.isPending}

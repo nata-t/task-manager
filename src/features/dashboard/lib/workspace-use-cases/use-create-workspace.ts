@@ -11,7 +11,9 @@ export function useCreateWorkspace() {
       const supabase = createClient();
 
       // Verify session is active before inserting
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       const { data, error } = await supabase
@@ -24,18 +26,23 @@ export function useCreateWorkspace() {
     },
     onMutate: async (newName) => {
       await queryClient.cancelQueries({ queryKey: workspaceKeys.all });
-      const previous = queryClient.getQueryData<WorkspaceWithProjectsCount[]>(workspaceKeys.all);
+      const previous = queryClient.getQueryData<WorkspaceWithProjectsCount[]>(
+        workspaceKeys.all,
+      );
 
-      queryClient.setQueryData<WorkspaceWithProjectsCount[]>(workspaceKeys.all, (old) => {
-        const dummy: WorkspaceWithProjectsCount = {
-          id: crypto.randomUUID(),
-          name: newName,
-          created_at: new Date().toISOString(),
-          projects: [{ count: 0 }],
-          owner_id: null,
-        };
-        return [dummy, ...(old || [])];
-      });
+      queryClient.setQueryData<WorkspaceWithProjectsCount[]>(
+        workspaceKeys.all,
+        (old) => {
+          const dummy: WorkspaceWithProjectsCount = {
+            id: crypto.randomUUID(),
+            name: newName,
+            created_at: new Date().toISOString(),
+            projects: [{ count: 0 }],
+            owner_id: null,
+          };
+          return [dummy, ...(old || [])];
+        },
+      );
 
       return { previous };
     },

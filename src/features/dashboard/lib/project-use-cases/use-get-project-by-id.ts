@@ -12,7 +12,9 @@ export const projectKeys = {
 };
 
 export type ProjectDetail = Tables<"projects"> & {
-  tasks: Pick<Tables<"tasks">, "id" | "status" | "due_date" | "assignee_id">[] | null;
+  tasks:
+    | Pick<Tables<"tasks">, "id" | "status" | "due_date" | "assignee_id">[]
+    | null;
   workspaces: {
     workspace_members: {
       user_id: string;
@@ -29,7 +31,8 @@ export function useGetProjectById(id: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("projects")
-        .select(`
+        .select(
+          `
           *,
           tasks(id, status, due_date, assignee_id),
           workspaces (
@@ -37,30 +40,37 @@ export function useGetProjectById(id: string) {
               user_id
             )
           )
-        `)
+        `,
+        )
         .eq("id", id)
         .single();
 
       if (error) throw error;
 
       // Manually fetch profiles
-      const memberIds = data.workspaces?.workspace_members.map((m: any) => m.user_id) || [];
+      const memberIds =
+        data.workspaces?.workspace_members.map((m: any) => m.user_id) || [];
       let profilesMap = new Map();
       if (memberIds.length > 0) {
-        const { data: profiles } = await supabase.from("profiles").select("*").in("id", memberIds);
-        profilesMap = new Map(profiles?.map(p => [p.id, p]) || []);
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("*")
+          .in("id", memberIds);
+        profilesMap = new Map(profiles?.map((p) => [p.id, p]) || []);
       }
 
       const finalData = {
         ...data,
         workspaces: data.workspaces
           ? {
-              workspace_members: data.workspaces.workspace_members.map((m: any) => ({
-                user_id: m.user_id,
-                profiles: profilesMap.get(m.user_id) || null
-              }))
+              workspace_members: data.workspaces.workspace_members.map(
+                (m: any) => ({
+                  user_id: m.user_id,
+                  profiles: profilesMap.get(m.user_id) || null,
+                }),
+              ),
             }
-          : null
+          : null,
       };
 
       return finalData as unknown as ProjectDetail;

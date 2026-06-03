@@ -3,7 +3,12 @@ import { type TaskWithDetails } from "../../lib/project-use-cases/use-get-projec
 import { useUpdateTask } from "../../lib/task-use-cases/use-update-task";
 import { TaskCard } from "../components/task-card";
 import { CreateTaskForm } from "../components/create-task-form";
-import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "@hello-pangea/dnd";
 import { Plus } from "lucide-react";
 import type { Tables } from "@/types/database.types";
 import { cn } from "@/lib/utils";
@@ -29,7 +34,9 @@ export function BoardView({ tasks, projectId, members }: BoardViewProps) {
     done: [],
   });
 
-  const [creatingIn, setCreatingIn] = useState<"todo" | "in_progress" | "done" | null>(null);
+  const [creatingIn, setCreatingIn] = useState<
+    "todo" | "in_progress" | "done" | null
+  >(null);
 
   const updateTask = useUpdateTask();
 
@@ -58,9 +65,10 @@ export function BoardView({ tasks, projectId, members }: BoardViewProps) {
     const destStatus = destination.droppableId as keyof StatusColumns;
 
     const sourceItems = Array.from(columns[sourceStatus]);
-    const destItems = sourceStatus === destStatus 
-      ? sourceItems 
-      : Array.from(columns[destStatus]);
+    const destItems =
+      sourceStatus === destStatus
+        ? sourceItems
+        : Array.from(columns[destStatus]);
 
     const [movedItem] = sourceItems.splice(source.index, 1);
 
@@ -70,7 +78,7 @@ export function BoardView({ tasks, projectId, members }: BoardViewProps) {
     } else {
       movedItem.status = destStatus;
       destItems.splice(destination.index, 0, movedItem);
-      
+
       setColumns({
         ...columns,
         [sourceStatus]: sourceItems,
@@ -94,15 +102,20 @@ export function BoardView({ tasks, projectId, members }: BoardViewProps) {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex items-start gap-4 h-full min-w-max pb-4">
           {(["todo", "in_progress", "done"] as const).map((status) => (
-            <div key={status} className="w-[320px] shrink-0 flex flex-col bg-muted/40 rounded-xl max-h-[80vh] overflow-hidden">
+            <div
+              key={status}
+              className="w-[320px] shrink-0 flex flex-col bg-muted/40 rounded-xl max-h-[80vh] overflow-hidden"
+            >
               <div className="px-3 py-3 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-sm capitalize">{LABELS[status]}</h3>
+                  <h3 className="font-semibold text-sm capitalize">
+                    {LABELS[status]}
+                  </h3>
                   <span className="bg-muted px-2 py-0.5 rounded-full text-xs font-medium text-muted-foreground">
                     {columns[status].length}
                   </span>
                 </div>
-                <button 
+                <button
                   onClick={() => setCreatingIn(status)}
                   className="p-1 hover:bg-muted text-muted-foreground hover:text-foreground rounded transition-colors"
                 >
@@ -112,25 +125,29 @@ export function BoardView({ tasks, projectId, members }: BoardViewProps) {
 
               <div className="px-2 pb-2 overflow-y-auto flex-1 custom-scrollbar">
                 {creatingIn === status && (
-                  <CreateTaskForm 
-                    projectId={projectId} 
-                    members={members} 
+                  <CreateTaskForm
+                    projectId={projectId}
+                    members={members}
                     defaultStatus={status}
-                    onCancel={() => setCreatingIn(null)} 
+                    onCancel={() => setCreatingIn(null)}
                   />
                 )}
                 <Droppable droppableId={status}>
                   {(provided, snapshot) => (
-                     <div
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className={cn(
-                          "min-h-[50px] transition-colors rounded-lg flex flex-col gap-2 p-1",
-                          snapshot.isDraggingOver && "bg-muted/60"
-                        )}
-                      >
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={cn(
+                        "min-h-[50px] transition-colors rounded-lg flex flex-col gap-2 p-1",
+                        snapshot.isDraggingOver && "bg-muted/60",
+                      )}
+                    >
                       {columns[status].map((task, index) => (
-                        <Draggable key={task.id} draggableId={task.id} index={index}>
+                        <Draggable
+                          key={task.id}
+                          draggableId={task.id}
+                          index={index}
+                        >
                           {(provided, snapshot) => (
                             <TaskCard
                               task={task}

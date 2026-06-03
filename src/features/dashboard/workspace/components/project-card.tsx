@@ -56,9 +56,12 @@ export function ProjectCard({
   const tasks = project.tasks ?? [];
   const totalTasks = tasks.length;
   const doneTasks = tasks.filter((t) => t.status === "done").length;
-  const inProgressTasks = tasks.filter((t) => t.status === "in_progress").length;
+  const inProgressTasks = tasks.filter(
+    (t) => t.status === "in_progress",
+  ).length;
   const overdueTasks = tasks.filter(
-    (t) => t.due_date && new Date(t.due_date) < new Date() && t.status !== "done"
+    (t) =>
+      t.due_date && new Date(t.due_date) < new Date() && t.status !== "done",
   ).length;
 
   const handleSave = () => {
@@ -121,7 +124,12 @@ export function ProjectCard({
           </div>
 
           {/* Delete action */}
-          <div onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button

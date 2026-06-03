@@ -10,7 +10,9 @@ export function useUpdateWorkspace() {
     mutationFn: async ({ id, name }: { id: string; name: string }) => {
       const supabase = createClient();
 
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       const { data, error } = await supabase
@@ -24,11 +26,20 @@ export function useUpdateWorkspace() {
     },
     onMutate: async (newVars) => {
       await queryClient.cancelQueries({ queryKey: workspaceKeys.all });
-      const previous = queryClient.getQueryData<WorkspaceWithProjectsCount[]>(workspaceKeys.all);
+      const previous = queryClient.getQueryData<WorkspaceWithProjectsCount[]>(
+        workspaceKeys.all,
+      );
 
-      queryClient.setQueryData<WorkspaceWithProjectsCount[]>(workspaceKeys.all, (old) => {
-        return old?.map((ws) => ws.id === newVars.id ? { ...ws, name: newVars.name } : ws) || [];
-      });
+      queryClient.setQueryData<WorkspaceWithProjectsCount[]>(
+        workspaceKeys.all,
+        (old) => {
+          return (
+            old?.map((ws) =>
+              ws.id === newVars.id ? { ...ws, name: newVars.name } : ws,
+            ) || []
+          );
+        },
+      );
 
       return { previous };
     },

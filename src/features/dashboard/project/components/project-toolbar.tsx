@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import type { Tables } from "@/types/database.types";
-import { useQueryState } from 'nuqs';
+import { useQueryState } from "nuqs";
 import { cn } from "@/lib/utils";
 
 interface ProjectToolbarProps {
@@ -24,10 +24,18 @@ interface ProjectToolbarProps {
   members: { user_id: string; profiles: Tables<"profiles"> | null }[];
 }
 
-export function ProjectToolbar({ viewMode, setViewMode, members }: ProjectToolbarProps) {
+export function ProjectToolbar({
+  viewMode,
+  setViewMode,
+  members,
+}: ProjectToolbarProps) {
   const [search, setSearch] = useQueryState("q", { defaultValue: "" });
-  const [statusFilter, setStatusFilter] = useQueryState("status", { defaultValue: "all" });
-  const [assigneeFilter, setAssigneeFilter] = useQueryState("assignee", { defaultValue: "all" });
+  const [statusFilter, setStatusFilter] = useQueryState("status", {
+    defaultValue: "all",
+  });
+  const [assigneeFilter, setAssigneeFilter] = useQueryState("assignee", {
+    defaultValue: "all",
+  });
 
   const tabs = [
     { value: "all", label: "All" },
@@ -42,12 +50,15 @@ export function ProjectToolbar({ viewMode, setViewMode, members }: ProjectToolba
         {tabs.map((tab) => (
           <button
             key={tab.value}
-            onClick={() => setStatusFilter(tab.value === "all" ? null : tab.value)}
+            onClick={() =>
+              setStatusFilter(tab.value === "all" ? null : tab.value)
+            }
             className={cn(
               "px-4 py-1.5 text-sm font-medium rounded-md transition-all",
-              statusFilter === tab.value || (statusFilter === "" && tab.value === "all")
+              statusFilter === tab.value ||
+                (statusFilter === "" && tab.value === "all")
                 ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted",
             )}
           >
             {tab.label}
@@ -68,7 +79,11 @@ export function ProjectToolbar({ viewMode, setViewMode, members }: ProjectToolba
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="icon" className="h-9 w-9 shrink-0 relative bg-background">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 shrink-0 relative bg-background"
+            >
               <SlidersHorizontal className="h-4 w-4" />
               {assigneeFilter !== "all" && assigneeFilter !== "" && (
                 <span className="absolute top-1 right-1 h-2 w-2 bg-primary rounded-full"></span>
@@ -86,9 +101,11 @@ export function ProjectToolbar({ viewMode, setViewMode, members }: ProjectToolba
               <div className="grid gap-2">
                 <div className="grid items-center gap-2 max-w-full">
                   <Label htmlFor="assignee">Assignee</Label>
-                  <Select 
-                    value={assigneeFilter === "" ? "all" : assigneeFilter} 
-                    onValueChange={(val) => setAssigneeFilter(val === "all" ? null : val)}
+                  <Select
+                    value={assigneeFilter === "" ? "all" : assigneeFilter}
+                    onValueChange={(val) =>
+                      setAssigneeFilter(val === "all" ? null : val)
+                    }
                   >
                     <SelectTrigger id="assignee" className="w-full truncate">
                       <SelectValue placeholder="Select assignee" />
@@ -115,7 +132,9 @@ export function ProjectToolbar({ viewMode, setViewMode, members }: ProjectToolba
             onClick={() => setViewMode("list")}
             className={cn(
               "h-7 w-8 rounded-sm",
-              viewMode === "list" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground"
+              viewMode === "list"
+                ? "bg-background shadow-sm text-foreground"
+                : "text-muted-foreground",
             )}
           >
             <List className="h-4 w-4" />
@@ -126,7 +145,9 @@ export function ProjectToolbar({ viewMode, setViewMode, members }: ProjectToolba
             onClick={() => setViewMode("board")}
             className={cn(
               "h-7 w-8 rounded-sm",
-              viewMode === "board" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground"
+              viewMode === "board"
+                ? "bg-background shadow-sm text-foreground"
+                : "text-muted-foreground",
             )}
           >
             <LayoutGrid className="h-4 w-4" />

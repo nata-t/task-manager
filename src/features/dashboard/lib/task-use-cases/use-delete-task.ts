@@ -15,39 +15,45 @@ export function useDeleteTask() {
 
   return useMutation({
     mutationFn: async ({ id }: DeleteTaskVars) => {
-      const { error } = await supabase
-        .from("tasks")
-        .delete()
-        .eq("id", id);
+      const { error } = await supabase.from("tasks").delete().eq("id", id);
 
       if (error) throw error;
       return id;
     },
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: projectKeys.tasks(variables.projectId) });
-      
-      const previousTasks = queryClient.getQueryData<TaskWithDetails[]>(projectKeys.tasks(variables.projectId));
-      
+      await queryClient.cancelQueries({
+        queryKey: projectKeys.tasks(variables.projectId),
+      });
+
+      const previousTasks = queryClient.getQueryData<TaskWithDetails[]>(
+        projectKeys.tasks(variables.projectId),
+      );
+
       if (previousTasks) {
         queryClient.setQueryData<TaskWithDetails[]>(
-          projectKeys.tasks(variables.projectId), 
-          (old) => old ? old.filter(t => t.id !== variables.id) : []
+          projectKeys.tasks(variables.projectId),
+          (old) => (old ? old.filter((t) => t.id !== variables.id) : []),
         );
       }
-      
+
       return { previousTasks };
     },
     onError: (err, variables, context) => {
       if (context?.previousTasks) {
-        queryClient.setQueryData(projectKeys.tasks(variables.projectId), context.previousTasks);
+        queryClient.setQueryData(
+          projectKeys.tasks(variables.projectId),
+          context.previousTasks,
+        );
       }
       toast.error(err.message || "Failed to delete task");
     },
     onSettled: (data, error, variables) => {
-      queryClient.invalidateQueries({ queryKey: projectKeys.tasks(variables.projectId) });
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.tasks(variables.projectId),
+      });
     },
     onSuccess: () => {
       toast.success("Task deleted");
-    }
+    },
   });
 }

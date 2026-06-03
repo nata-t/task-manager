@@ -29,10 +29,16 @@ export function useUpdateProject() {
     },
     onSuccess: (data, variables) => {
       // Invalidate project details
-      queryClient.invalidateQueries({ queryKey: projectKeys.detail(variables.id) });
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.detail(variables.id),
+      });
       // Invalidate workspace projects in case name changed
-      queryClient.invalidateQueries({ queryKey: workspaceDetailKeys.projects(variables.workspaceId) });
-      queryClient.invalidateQueries({ queryKey: workspaceDetailKeys.detail(variables.workspaceId) });
+      queryClient.invalidateQueries({
+        queryKey: workspaceDetailKeys.projects(variables.workspaceId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: workspaceDetailKeys.detail(variables.workspaceId),
+      });
       toast.success("Project updated");
     },
     onError: (error) => {

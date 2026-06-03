@@ -29,8 +29,10 @@ export function useGetProjectTasks(projectId: string) {
         },
         () => {
           // Invalidate tasks when any changes occur
-          queryClient.invalidateQueries({ queryKey: projectKeys.tasks(projectId) });
-        }
+          queryClient.invalidateQueries({
+            queryKey: projectKeys.tasks(projectId),
+          });
+        },
       )
       .subscribe();
 
@@ -50,16 +52,23 @@ export function useGetProjectTasks(projectId: string) {
 
       if (error) throw error;
 
-      const assigneeIds = Array.from(new Set(data.map(t => t.assignee_id).filter(Boolean))) as string[];
+      const assigneeIds = Array.from(
+        new Set(data.map((t) => t.assignee_id).filter(Boolean)),
+      ) as string[];
       let profilesMap = new Map();
       if (assigneeIds.length > 0) {
-        const { data: profiles } = await supabase.from("profiles").select("*").in("id", assigneeIds);
-        profilesMap = new Map(profiles?.map(p => [p.id, p]));
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("*")
+          .in("id", assigneeIds);
+        profilesMap = new Map(profiles?.map((p) => [p.id, p]));
       }
 
-      const tasksWithDetails = data.map(task => ({
+      const tasksWithDetails = data.map((task) => ({
         ...task,
-        profiles: task.assignee_id ? profilesMap.get(task.assignee_id) || null : null
+        profiles: task.assignee_id
+          ? profilesMap.get(task.assignee_id) || null
+          : null,
       }));
 
       return tasksWithDetails as unknown as TaskWithDetails[];

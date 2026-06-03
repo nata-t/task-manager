@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, JetBrains_Mono, Inter } from "next/font/google";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -38,12 +38,14 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-              "h-full",
-              "antialiased",
-              geistSans.variable,
-              geistMono.variable,
-              jetbrainsMono.variable,
-              "font-sans", inter.variable)}
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        jetbrainsMono.variable,
+        "font-sans",
+        inter.variable,
+      )}
     >
       <body className="min-h-full">
         <NuqsAdapter>

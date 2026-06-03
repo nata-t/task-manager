@@ -10,23 +10,27 @@ export function useDeleteWorkspace() {
     mutationFn: async (id: string) => {
       const supabase = createClient();
 
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const { error } = await supabase
-        .from("workspaces")
-        .delete()
-        .eq("id", id);
+      const { error } = await supabase.from("workspaces").delete().eq("id", id);
       if (error) throw error;
       return id;
     },
     onMutate: async (deletedId) => {
       await queryClient.cancelQueries({ queryKey: workspaceKeys.all });
-      const previous = queryClient.getQueryData<WorkspaceWithProjectsCount[]>(workspaceKeys.all);
+      const previous = queryClient.getQueryData<WorkspaceWithProjectsCount[]>(
+        workspaceKeys.all,
+      );
 
-      queryClient.setQueryData<WorkspaceWithProjectsCount[]>(workspaceKeys.all, (old) => {
-        return old?.filter((ws) => ws.id !== deletedId) || [];
-      });
+      queryClient.setQueryData<WorkspaceWithProjectsCount[]>(
+        workspaceKeys.all,
+        (old) => {
+          return old?.filter((ws) => ws.id !== deletedId) || [];
+        },
+      );
 
       return { previous };
     },

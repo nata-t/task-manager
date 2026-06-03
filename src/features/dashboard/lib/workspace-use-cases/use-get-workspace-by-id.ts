@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
-import { workspaceDetailKeys, type WorkspaceDetail } from "../../workspace/schema";
+import {
+  workspaceDetailKeys,
+  type WorkspaceDetail,
+} from "../../workspace/schema";
 
 export function useWorkspaceById(workspaceId: string) {
   return useQuery({
@@ -9,10 +12,12 @@ export function useWorkspaceById(workspaceId: string) {
       const supabase = createClient();
       const { data: workspaceData, error: workspaceError } = await supabase
         .from("workspaces")
-        .select(`
+        .select(
+          `
           *,
           workspace_members(count)
-        `)
+        `,
+        )
         .eq("id", workspaceId)
         .single();
 
@@ -30,7 +35,7 @@ export function useWorkspaceById(workspaceId: string) {
 
       const finalData = {
         ...workspaceData,
-        profiles: profileData
+        profiles: profileData,
       };
 
       return finalData as unknown as WorkspaceDetail;

@@ -20,7 +20,11 @@ export function ListView({ tasks, projectId, members }: ListViewProps) {
       <div className="flex items-center justify-between mb-2">
         <h3 className="font-medium">All Tasks ({tasks.length})</h3>
         {!isCreating && (
-          <Button size="sm" className="gap-1.5 h-8 bg-primary" onClick={() => setIsCreating(true)}>
+          <Button
+            size="sm"
+            className="gap-1.5 h-8 bg-primary"
+            onClick={() => setIsCreating(true)}
+          >
             <Plus className="h-4 w-4" /> Add Task
           </Button>
         )}
@@ -28,19 +32,19 @@ export function ListView({ tasks, projectId, members }: ListViewProps) {
 
       <div className="flex flex-col gap-2">
         {isCreating && (
-          <CreateTaskForm 
-            projectId={projectId} 
-            members={members} 
-            onCancel={() => setIsCreating(false)} 
+          <CreateTaskForm
+            projectId={projectId}
+            members={members}
+            onCancel={() => setIsCreating(false)}
           />
         )}
 
         {tasks.map((task) => (
-          <TaskCard 
-            key={task.id} 
-            task={task} 
-            projectId={projectId} 
-            members={members} 
+          <TaskCard
+            key={task.id}
+            task={task}
+            projectId={projectId}
+            members={members}
             viewMode="list"
           />
         ))}

@@ -4,8 +4,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, User, Circle, Clock, CheckCircle2 } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { useCreateTask } from "../../lib/task-use-cases/use-create-task";
@@ -19,15 +29,22 @@ interface CreateTaskFormProps {
   onCancel: () => void;
 }
 
-export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onCancel }: CreateTaskFormProps) {
+export function CreateTaskForm({
+  projectId,
+  members,
+  defaultStatus = "todo",
+  onCancel,
+}: CreateTaskFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState<"todo" | "in_progress" | "done">(defaultStatus);
+  const [status, setStatus] = useState<"todo" | "in_progress" | "done">(
+    defaultStatus,
+  );
   const [assigneeId, setAssigneeId] = useState<string | null>(null);
   const [dueDate, setDueDate] = useState<string | null>(null);
-  
+
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  
+
   const createTask = useCreateTask();
   const titleInputRef = useRef<HTMLInputElement>(null);
 
@@ -37,21 +54,21 @@ export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onC
 
   const handleSave = () => {
     if (!title.trim()) return;
-    
+
     createTask.mutate(
-      { 
-        projectId, 
-        title: title.trim(), 
-        description: description.trim() || undefined, 
-        status, 
+      {
+        projectId,
+        title: title.trim(),
+        description: description.trim() || undefined,
+        status,
         assignee_id: assigneeId,
-        due_date: dueDate
+        due_date: dueDate,
       },
       {
         onSettled: () => {
           onCancel();
-        }
-      }
+        },
+      },
     );
   };
 
@@ -65,8 +82,10 @@ export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onC
   };
 
   const StatusIcon = () => {
-    if (status === "done") return <CheckCircle2 className="h-4 w-4 text-green-500" />;
-    if (status === "in_progress") return <Clock className="h-4 w-4 text-yellow-500" />;
+    if (status === "done")
+      return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+    if (status === "in_progress")
+      return <Clock className="h-4 w-4 text-yellow-500" />;
     return <Circle className="h-4 w-4 text-muted-foreground" />;
   };
 
@@ -81,7 +100,7 @@ export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onC
         disabled={createTask.isPending}
         className="font-medium bg-background"
       />
-      
+
       <Textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
@@ -94,7 +113,11 @@ export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onC
       <div className="flex items-center justify-between flex-wrap gap-2 mt-1">
         <div className="flex items-center gap-2 flex-wrap">
           {/* Status Picker */}
-          <Select value={status} onValueChange={(val: any) => setStatus(val)} disabled={createTask.isPending}>
+          <Select
+            value={status}
+            onValueChange={(val: any) => setStatus(val)}
+            disabled={createTask.isPending}
+          >
             <SelectTrigger className="h-8 px-2.5 text-xs flex items-center gap-1.5 bg-background font-medium hover:bg-muted transition-colors rounded-md border border-input">
               <SelectValue>
                 <div className="flex items-center gap-1.5">
@@ -105,13 +128,19 @@ export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onC
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="todo">
-                <div className="flex items-center gap-1.5"><Circle className="h-4 w-4 text-muted-foreground" /> Todo</div>
+                <div className="flex items-center gap-1.5">
+                  <Circle className="h-4 w-4 text-muted-foreground" /> Todo
+                </div>
               </SelectItem>
               <SelectItem value="in_progress">
-                <div className="flex items-center gap-1.5"><Clock className="h-4 w-4 text-yellow-500" /> In Progress</div>
+                <div className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4 text-yellow-500" /> In Progress
+                </div>
               </SelectItem>
               <SelectItem value="done">
-                <div className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-green-500" /> Done</div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" /> Done
+                </div>
               </SelectItem>
             </SelectContent>
           </Select>
@@ -119,7 +148,9 @@ export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onC
           {/* Assignee Picker */}
           <Select
             value={assigneeId || "unassigned"}
-            onValueChange={(val) => setAssigneeId(val === "unassigned" ? null : val)}
+            onValueChange={(val) =>
+              setAssigneeId(val === "unassigned" ? null : val)
+            }
             disabled={createTask.isPending}
           >
             <SelectTrigger className="h-8 px-2.5 text-xs flex items-center gap-1.5 bg-background hover:bg-muted transition-colors rounded-md border border-input font-medium [&>svg]:hidden">
@@ -128,7 +159,8 @@ export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onC
                   <span className="flex items-center gap-1.5">
                     <User className="h-3.5 w-3.5" />
                     <span className="truncate max-w-[80px]">
-                      {members.find(m => m.user_id === assigneeId)?.profiles?.full_name || "Unknown"}
+                      {members.find((m) => m.user_id === assigneeId)?.profiles
+                        ?.full_name || "Unknown"}
                     </span>
                   </span>
                 ) : (
@@ -140,8 +172,10 @@ export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onC
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="unassigned" className="text-muted-foreground">Unassigned</SelectItem>
-              {members.map(member => (
+              <SelectItem value="unassigned" className="text-muted-foreground">
+                Unassigned
+              </SelectItem>
+              {members.map((member) => (
                 <SelectItem key={member.user_id} value={member.user_id}>
                   {member.profiles?.full_name || "Unknown User"}
                 </SelectItem>
@@ -162,7 +196,9 @@ export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onC
                 )}
               >
                 <CalendarIcon className="h-3.5 w-3.5" />
-                {dueDate ? format(new Date(dueDate), "MMM d, yyyy") : "Due date"}
+                {dueDate
+                  ? format(new Date(dueDate), "MMM d, yyyy")
+                  : "Due date"}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
@@ -180,10 +216,19 @@ export function CreateTaskForm({ projectId, members, defaultStatus = "todo", onC
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={onCancel} disabled={createTask.isPending}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onCancel}
+            disabled={createTask.isPending}
+          >
             Cancel
           </Button>
-          <Button size="sm" onClick={handleSave} disabled={!title.trim() || createTask.isPending}>
+          <Button
+            size="sm"
+            onClick={handleSave}
+            disabled={!title.trim() || createTask.isPending}
+          >
             Create Task
           </Button>
         </div>

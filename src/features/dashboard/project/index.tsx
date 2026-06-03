@@ -10,9 +10,23 @@ import { ListView } from "./sections/list-view";
 import { BoardView } from "./sections/board-view";
 import { useQueryState } from "nuqs";
 
-export function ProjectDetailFeature({ projectId, workspaceId }: { projectId: string, workspaceId: string }) {
-  const { data: project, isLoading: isProjLoading, error: projError } = useGetProjectById(projectId);
-  const { data: tasks, isLoading: isTasksLoading, error: tasksError } = useGetProjectTasks(projectId);
+export function ProjectDetailFeature({
+  projectId,
+  workspaceId,
+}: {
+  projectId: string;
+  workspaceId: string;
+}) {
+  const {
+    data: project,
+    isLoading: isProjLoading,
+    error: projError,
+  } = useGetProjectById(projectId);
+  const {
+    data: tasks,
+    isLoading: isTasksLoading,
+    error: tasksError,
+  } = useGetProjectTasks(projectId);
 
   const [viewMode, setViewMode] = useState<"list" | "board">("board");
 
@@ -40,23 +54,46 @@ export function ProjectDetailFeature({ projectId, workspaceId }: { projectId: st
   const members = project.workspaces?.workspace_members || [];
 
   // Filter tasks inline based on query parameters
-  const filteredTasks = tasks.filter(task => {
-    if (statusFilter !== "all" && statusFilter !== "" && task.status !== statusFilter) return false;
-    if (assigneeFilter !== "all" && assigneeFilter !== "" && task.assignee_id !== assigneeFilter) return false;
-    if (search && !task.title.toLowerCase().includes(search.toLowerCase())) return false;
+  const filteredTasks = tasks.filter((task) => {
+    if (
+      statusFilter !== "all" &&
+      statusFilter !== "" &&
+      task.status !== statusFilter
+    )
+      return false;
+    if (
+      assigneeFilter !== "all" &&
+      assigneeFilter !== "" &&
+      task.assignee_id !== assigneeFilter
+    )
+      return false;
+    if (search && !task.title.toLowerCase().includes(search.toLowerCase()))
+      return false;
     return true;
   });
 
   return (
     <div className="p-8 max-w-[1400px] w-full mx-auto flex flex-col gap-2 h-full">
       <ProjectHeader project={project} />
-      <ProjectToolbar viewMode={viewMode} setViewMode={setViewMode} members={members} />
-      
+      <ProjectToolbar
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        members={members}
+      />
+
       <div className="mt-2 flex-1">
         {viewMode === "list" ? (
-          <ListView tasks={filteredTasks} projectId={projectId} members={members} />
+          <ListView
+            tasks={filteredTasks}
+            projectId={projectId}
+            members={members}
+          />
         ) : (
-          <BoardView tasks={filteredTasks} projectId={projectId} members={members} />
+          <BoardView
+            tasks={filteredTasks}
+            projectId={projectId}
+            members={members}
+          />
         )}
       </div>
     </div>

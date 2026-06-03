@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { Hash } from "lucide-react";
 import { getProject, getWorkspace } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -29,12 +30,14 @@ export function DashboardHeader() {
             <Link
               href={`/dashboard/${workspace.id}`}
               className={cn(
-                "flex items-center gap-1 rounded px-1.5 py-0.5 font-medium transition-colors",
+                "flex items-center gap-1.5 rounded px-1.5 py-0.5 font-medium transition-colors",
                 "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground",
-                !project && "text-foreground"
+                !project && "text-foreground",
               )}
             >
-              <span>{workspace.emoji}</span>
+              <span className="flex h-4 w-4 items-center justify-center rounded bg-sidebar-primary/10 text-[10px] font-bold text-sidebar-primary">
+                {workspace.name.charAt(0).toUpperCase()}
+              </span>
               <span className="truncate">{workspace.name}</span>
             </Link>
           </>
@@ -43,10 +46,10 @@ export function DashboardHeader() {
         {project && (
           <>
             <span className="text-muted-foreground/50">/</span>
-            <span
-              className="flex items-center gap-1 rounded px-1.5 py-0.5 font-medium text-foreground"
-            >
-              <span>{project.icon}</span>
+            <span className="flex items-center gap-1.5 rounded px-1.5 py-0.5 font-medium text-foreground">
+              <span className="flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <Hash className="h-3.5 w-3.5" />
+              </span>
               <span className="truncate">{project.name}</span>
             </span>
           </>

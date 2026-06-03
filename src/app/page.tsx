@@ -1,5 +1,5 @@
-"use client";
+import Home from "@/features/home";
 
-export default function SonnerDemo() {
-  return <h1>This is the root of your app</h1>;
+export default function HomePage() {
+  return <Home />;
 }

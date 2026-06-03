@@ -7,9 +7,21 @@ import { WorkspaceHeader } from "./components/workspace-header";
 import TabsSection from "./sections/tabs";
 import { ProjectList } from "./sections/project-list";
 
-export function WorkspaceDetailFeature({ workspaceId }: { workspaceId: string }) {
-  const { data: workspace, isLoading: isLoadingWorkspace, error: workspaceError } = useWorkspaceById(workspaceId);
-  const { data: projects, isLoading: isLoadingProjects, error: projectsError } = useWorkspaceProjects(workspaceId);
+export function WorkspaceDetailFeature({
+  workspaceId,
+}: {
+  workspaceId: string;
+}) {
+  const {
+    data: workspace,
+    isLoading: isLoadingWorkspace,
+    error: workspaceError,
+  } = useWorkspaceById(workspaceId);
+  const {
+    data: projects,
+    isLoading: isLoadingProjects,
+    error: projectsError,
+  } = useWorkspaceProjects(workspaceId);
 
   const isLoading = isLoadingWorkspace || isLoadingProjects;
   const error = workspaceError || projectsError;

@@ -18,7 +18,14 @@ export function useCreateTask() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ projectId, title, status, description, assignee_id, due_date }: CreateTaskVars) => {
+    mutationFn: async ({
+      projectId,
+      title,
+      status,
+      description,
+      assignee_id,
+      due_date,
+    }: CreateTaskVars) => {
       const { data, error } = await supabase
         .from("tasks")
         .insert({
@@ -27,7 +34,7 @@ export function useCreateTask() {
           status,
           description,
           assignee_id,
-          due_date
+          due_date,
         })
         .select(`*`)
         .single();
@@ -36,14 +43,20 @@ export function useCreateTask() {
 
       let profileData = null;
       if (data.assignee_id) {
-        const { data: profile } = await supabase.from("profiles").select("*").eq("id", data.assignee_id).maybeSingle();
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", data.assignee_id)
+          .maybeSingle();
         profileData = profile;
       }
 
       return { ...data, profiles: profileData } as unknown as TaskWithDetails;
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: projectKeys.tasks(variables.projectId) });
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.tasks(variables.projectId),
+      });
       toast.success("Task created");
     },
     onError: (error) => {

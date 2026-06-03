@@ -15,13 +15,17 @@ interface ProjectListProps {
 
 export function ProjectList({ workspaceId }: ProjectListProps) {
   const [query, setQuery] = useState("");
-  const { data: projects, isLoading, error } = useWorkspaceProjects(workspaceId);
+  const {
+    data: projects,
+    isLoading,
+    error,
+  } = useWorkspaceProjects(workspaceId);
   const createProject = useCreateProject();
   const deleteProject = useDeleteProject();
 
   const filtered =
     projects?.filter((p) =>
-      p.name.toLowerCase().includes(query.toLowerCase())
+      p.name.toLowerCase().includes(query.toLowerCase()),
     ) ?? [];
 
   return (
@@ -92,7 +96,8 @@ export function ProjectList({ workspaceId }: ProjectListProps) {
           <p className="text-sm">No projects match your search</p>
         </div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-3">
+        // all grid items should have the same height
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))]  gap-3">
           {filtered.map((project) => (
             <ProjectCard
               key={project.id}

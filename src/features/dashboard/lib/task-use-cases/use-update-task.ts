@@ -31,7 +31,11 @@ export function useUpdateTask() {
 
       let profileData = null;
       if (data.assignee_id) {
-        const { data: profile } = await supabase.from("profiles").select("*").eq("id", data.assignee_id).maybeSingle();
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", data.assignee_id)
+          .maybeSingle();
         profileData = profile;
       }
 
@@ -39,37 +43,46 @@ export function useUpdateTask() {
     },
     // Optimistically update the UI
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: projectKeys.tasks(variables.projectId) });
-      
-      const previousTasks = queryClient.getQueryData<TaskWithDetails[]>(projectKeys.tasks(variables.projectId));
-      
+      await queryClient.cancelQueries({
+        queryKey: projectKeys.tasks(variables.projectId),
+      });
+
+      const previousTasks = queryClient.getQueryData<TaskWithDetails[]>(
+        projectKeys.tasks(variables.projectId),
+      );
+
       if (previousTasks) {
         queryClient.setQueryData<TaskWithDetails[]>(
-          projectKeys.tasks(variables.projectId), 
+          projectKeys.tasks(variables.projectId),
           (old) => {
             if (!old) return old;
-            return old.map(task => 
-              task.id === variables.id 
-                ? { ...task, ...variables } as TaskWithDetails 
-                : task
+            return old.map((task) =>
+              task.id === variables.id
+                ? ({ ...task, ...variables } as TaskWithDetails)
+                : task,
             );
-          }
+          },
         );
       }
-      
+
       return { previousTasks };
     },
     onError: (err, variables, context) => {
       // Rollback on error
       if (context?.previousTasks) {
-        queryClient.setQueryData(projectKeys.tasks(variables.projectId), context.previousTasks);
+        queryClient.setQueryData(
+          projectKeys.tasks(variables.projectId),
+          context.previousTasks,
+        );
       }
       toast.error(err.message || "Failed to update task");
     },
     onSettled: (data, error, variables) => {
-      // Refresh to ensure server state is perfectly aligned, 
+      // Refresh to ensure server state is perfectly aligned,
       // though our optimistic update handles the UI instantly
-      queryClient.invalidateQueries({ queryKey: projectKeys.tasks(variables.projectId) });
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.tasks(variables.projectId),
+      });
     },
   });
 }

@@ -1,5 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { MoreVertical, UserPlus, FolderPlus, Trash2, Edit, Menu } from "lucide-react";
+import {
+  MoreVertical,
+  UserPlus,
+  FolderPlus,
+  Trash2,
+  Edit,
+  Menu,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,14 +40,14 @@ function formatDate(iso: string) {
 
 function calculateLatestDeadline(projects: ProjectWithTaskCounts[]) {
   if (!projects || projects.length === 0) return null;
-  
+
   const times = projects
-    .flatMap(p => p.tasks || [])
-    .map(t => t.due_date ? new Date(t.due_date).getTime() : 0)
-    .filter(time => time > 0);
+    .flatMap((p) => p.tasks || [])
+    .map((t) => (t.due_date ? new Date(t.due_date).getTime() : 0))
+    .filter((time) => time > 0);
 
   if (times.length === 0) return null;
-  
+
   const latestDate = new Date(Math.max(...times));
   return formatDate(latestDate.toISOString());
 }
@@ -50,11 +57,14 @@ interface WorkspaceHeaderProps {
   projects?: ProjectWithTaskCounts[];
 }
 
-export function WorkspaceHeader({ workspace, projects = [] }: WorkspaceHeaderProps) {
+export function WorkspaceHeader({
+  workspace,
+  projects = [],
+}: WorkspaceHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(workspace.name);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  
+
   const updateWorkspace = useUpdateWorkspace();
   const deleteWorkspace = useDeleteWorkspace();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -85,7 +95,7 @@ export function WorkspaceHeader({ workspace, projects = [] }: WorkspaceHeaderPro
   };
 
   const latestDeadline = calculateLatestDeadline(projects);
-  const dateString = latestDeadline 
+  const dateString = latestDeadline
     ? `created at ${formatDate(workspace.created_at)} - deadline ${latestDeadline}`
     : `created at ${formatDate(workspace.created_at)} - no active deadline`;
 
@@ -102,7 +112,7 @@ export function WorkspaceHeader({ workspace, projects = [] }: WorkspaceHeaderPro
             className="h-10 text-2xl font-semibold px-2 w-full max-w-sm"
           />
         ) : (
-          <h1 
+          <h1
             className="text-3xl font-semibold hover:underline decoration-muted-foreground underline-offset-4 cursor-pointer inline-block tracking-tight"
             onClick={() => {
               setEditName(workspace.name);
@@ -149,8 +159,8 @@ export function WorkspaceHeader({ workspace, projects = [] }: WorkspaceHeaderPro
             <div className="my-1 h-px bg-muted" />
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   className="justify-start h-9 px-2 text-sm text-destructive hover:text-destructive hover:bg-destructive/10"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
@@ -161,7 +171,9 @@ export function WorkspaceHeader({ workspace, projects = [] }: WorkspaceHeaderPro
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete Workspace</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to delete "{workspace.name}"? This action cannot be undone. All projects and tasks inside this workspace will be permanently deleted.
+                    Are you sure you want to delete "{workspace.name}"? This
+                    action cannot be undone. All projects and tasks inside this
+                    workspace will be permanently deleted.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

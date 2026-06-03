@@ -16,8 +16,39 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { getProjectsByWorkspace, getWorkspace, countTasksByStatus } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { useWorkspaces } from "@/features/dashboard/lib/workspace-use-cases/use-get-workspaces";
+import { useWorkspaceProjects } from "@/features/dashboard/lib/workspace-use-cases/use-get-workspace-projects";
+import { useCreateProject } from "@/features/dashboard/lib/project-use-cases/use-create-project";
+import { Hash, Loader2, Plus } from "lucide-react";
+
+// Deterministic UI helpers (DB has no color/icon columns)
+const WS_COLORS = [
+  "oklch(0.55 0.18 250)",
+  "oklch(0.55 0.18 150)",
+  "oklch(0.55 0.18 30)",
+  "oklch(0.55 0.18 300)",
+  "oklch(0.55 0.18 60)",
+  "oklch(0.55 0.18 190)",
+];
+
+const PROJ_COLORS = [
+  "oklch(0.60 0.20 250)",
+  "oklch(0.60 0.20 130)",
+  "oklch(0.60 0.20 20)",
+  "oklch(0.60 0.20 310)",
+  "oklch(0.60 0.20 70)",
+];
+
+function wsColor(id: string) {
+  const code = id.charCodeAt(0) + id.charCodeAt(id.length - 1);
+  return WS_COLORS[code % WS_COLORS.length];
+}
+
+function projColor(id: string) {
+  const code = id.charCodeAt(0) + id.charCodeAt(id.length - 1);
+  return PROJ_COLORS[code % PROJ_COLORS.length];
+}
 
 export function ProjectSidebar() {
   const params = useParams();
@@ -26,19 +57,24 @@ export function ProjectSidebar() {
   const workspaceId = params?.workspaceId as string | undefined;
   const projectId = params?.projectId as string | undefined;
 
-  const workspace = workspaceId ? getWorkspace(workspaceId) : undefined;
-  const projects = workspaceId ? getProjectsByWorkspace(workspaceId) : [];
+  const { data: workspaces } = useWorkspaces();
+  const workspace = workspaces?.find((w) => w.id === workspaceId);
+  const { data: projects = [] } = useWorkspaceProjects(workspaceId || "");
+  const createProject = useCreateProject();
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border">
+    <Sidebar
+      collapsible="icon"
+      className="!left-14 !top-14 !h-[calc(100svh-3.5rem)] border-r border-border"
+    >
       <SidebarHeader className="px-3 pt-3 pb-2">
         {workspace ? (
           <div className="flex items-center gap-2 overflow-hidden">
             <div
-              className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg text-sm"
-              style={{ background: workspace.color }}
+              className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg text-sm font-semibold"
+              style={{ background: wsColor(workspace.id), color: "white" }}
             >
-              {workspace.emoji}
+              {workspace.name.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0 group-data-[collapsible=icon]:hidden">
               <p className="truncate text-xs font-semibold text-sidebar-foreground">
@@ -91,22 +127,29 @@ export function ProjectSidebar() {
           <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
             Projects
           </SidebarGroupLabel>
-          <SidebarGroupAction title="New project" aria-label="New project">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 256 256"
-              fill="currentColor"
-            >
-              <path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z" />
-            </svg>
+          <SidebarGroupAction
+            title="New project"
+            aria-label="New project"
+            onClick={() => {
+              if (workspaceId) {
+                createProject.mutate({ workspaceId, name: "New Project" });
+              }
+            }}
+            disabled={!workspaceId || createProject.isPending}
+          >
+            {createProject.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            ) : (
+              <Plus className="h-4 w-4" />
+            )}
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
               {projects.map((project) => {
                 const isActive = project.id === projectId;
-                const counts = countTasksByStatus(project.id);
+                const total = project.tasks?.length || 0;
+                const done =
+                  project.tasks?.filter((t) => t.status === "done").length || 0;
                 return (
                   <SidebarMenuItem key={project.id}>
                     <SidebarMenuButton
@@ -116,7 +159,7 @@ export function ProjectSidebar() {
                       size="default"
                       className={cn(
                         "group/proj",
-                        isActive && "bg-sidebar-accent font-medium"
+                        isActive && "bg-sidebar-accent font-medium",
                       )}
                     >
                       <Link
@@ -126,11 +169,11 @@ export function ProjectSidebar() {
                         <span
                           className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded text-xs"
                           style={{
-                            background: `color-mix(in oklch, ${project.color} 20%, transparent)`,
-                            color: project.color,
+                            background: `color-mix(in oklch, ${projColor(project.id)} 20%, transparent)`,
+                            color: projColor(project.id),
                           }}
                         >
-                          {project.icon}
+                          <Hash className="h-3 w-3" />
                         </span>
                         <span className="flex-1 truncate text-xs">
                           {project.name}
@@ -140,10 +183,10 @@ export function ProjectSidebar() {
                           className={cn(
                             "ml-auto flex-shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium tabular-nums",
                             "bg-sidebar-accent text-muted-foreground",
-                            "group-data-[collapsible=icon]:hidden"
+                            "group-data-[collapsible=icon]:hidden",
                           )}
                         >
-                          {counts.done}/{counts.total}
+                          {done}/{total}
                         </span>
                       </Link>
                     </SidebarMenuButton>

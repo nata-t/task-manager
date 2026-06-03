@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
-import { workspaceDetailKeys, type ProjectWithTaskCounts } from "../../workspace/schema";
+import {
+  workspaceDetailKeys,
+  type ProjectWithTaskCounts,
+} from "../../workspace/schema";
 
 export function useWorkspaceProjects(workspaceId: string) {
   return useQuery({
@@ -9,10 +12,12 @@ export function useWorkspaceProjects(workspaceId: string) {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("projects")
-        .select(`
+        .select(
+          `
           *,
           tasks(id, title, description, status, due_date)
-        `)
+        `,
+        )
         .eq("workspace_id", workspaceId)
         .order("created_at", { ascending: false });
 
