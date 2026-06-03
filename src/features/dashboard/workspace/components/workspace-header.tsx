@@ -120,8 +120,8 @@ export function WorkspaceHeader({ workspace, projects = [] }: WorkspaceHeaderPro
 
       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-10 w-10 hover:bg-muted/50 transition-colors">
-            <Menu className="!h-6.5 !w-6.5" />
+          <Button variant="ghost" size="icon" className="h-8 w-8 mt-2">
+            <Menu className="h-6 w-6" />
           </Button>
         </PopoverTrigger>
         <PopoverContent align="end" className="w-48 p-2">

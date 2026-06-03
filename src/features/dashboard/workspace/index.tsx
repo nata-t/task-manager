@@ -39,7 +39,7 @@ export function WorkspaceDetailFeature({ workspaceId }: { workspaceId: string })
     <div className="p-8 max-w-[1200px] w-full mx-auto">
       <WorkspaceHeader workspace={workspace} projects={projects} />
       <TabsSection workspaceId={workspaceId} />
-      <ProjectList />
+      <ProjectList workspaceId={workspaceId} />
     </div>
   );
 }
