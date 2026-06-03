@@ -29,6 +29,7 @@ export type TaskWithMeta = Tables<"tasks"> & {
 export const WORKSPACES: WorkspaceWithMeta[] = [
   {
     id: "ws-1",
+    owner_id: "user-1",
     name: "Kilet Design System",
     created_at: "2026-01-10T08:00:00Z",
     initials: "KD",
@@ -37,6 +38,7 @@ export const WORKSPACES: WorkspaceWithMeta[] = [
   },
   {
     id: "ws-2",
+    owner_id: "user-1",
     name: "Backend API Platform",
     created_at: "2026-01-15T09:30:00Z",
     initials: "BA",
@@ -45,6 +47,7 @@ export const WORKSPACES: WorkspaceWithMeta[] = [
   },
   {
     id: "ws-3",
+    owner_id: "user-1",
     name: "Mobile Companion App",
     created_at: "2026-02-01T10:00:00Z",
     initials: "MC",
