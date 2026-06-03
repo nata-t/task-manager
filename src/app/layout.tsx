@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, JetBrains_Mono, Inter } from "next/font/google";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -45,7 +46,9 @@ export default function RootLayout({
               "font-sans", inter.variable)}
     >
       <body className="min-h-full">
-        <QueryProvider>{children}</QueryProvider>
+        <NuqsAdapter>
+          <QueryProvider>{children}</QueryProvider>
+        </NuqsAdapter>
         <Toaster />
       </body>
     </html>

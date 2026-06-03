@@ -75,7 +75,7 @@ export function ProjectCard({
   };
 
   return (
-    <Link href={`/dashboard/${workspaceId}/projects/${project.id}`}>
+    <Link href={`/dashboard/${workspaceId}/${project.id}`}>
       <Card className="group flex flex-col gap-4 p-5 transition-colors hover:bg-accent cursor-pointer">
         {/* Top row: icon + name + delete */}
         <div className="flex items-start gap-3">
