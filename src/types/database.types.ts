@@ -38,18 +38,21 @@ export type Database = {
       projects: {
         Row: {
           created_at: string
+          description: string | null
           id: string
           name: string
           workspace_id: string
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id?: string
           name: string
           workspace_id: string
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: string
           name?: string
           workspace_id?: string
