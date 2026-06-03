@@ -1,8 +1,8 @@
 # Task Manager - Technical Assessment
 
 ## Assignment Timeline
-- **Start Time:** Jun 2, 11 pm 
-- **End Time:** Jun 3, 11:30 pm 
+- **Start Time:** Jun 2, 11 PM 
+- **End Time:** Jun 3, 11:30 PM 
 
 ## How to Run Locally
 
