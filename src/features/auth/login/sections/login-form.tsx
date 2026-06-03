@@ -32,13 +32,12 @@ export function LoginForm() {
     });
 
     if (error) {
-      // Don't expose internals — generic message for wrong credentials
       setServerError("Invalid email or password. Please try again.");
       return;
     }
 
     router.push("/dashboard");
-    router.refresh(); // force server components to re-render with new session
+    router.refresh();
   }
 
   return (

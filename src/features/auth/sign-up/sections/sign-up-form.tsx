@@ -50,11 +50,7 @@ export function SignUpForm() {
       return;
     }
 
-    // Supabase may require email confirmation depending on your project settings.
-    // If email confirmation is OFF (recommended for this assignment), the user
-    // is signed in immediately and we redirect to dashboard.
-    // If email confirmation is ON, redirect to a confirmation notice page instead.
-    router.push("/dashboard");
+    router.push("/");
     router.refresh();
   }
 
